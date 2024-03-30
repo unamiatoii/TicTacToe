@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:tictatoe/Pages/playerSelection.dart';
 
 void main() {
   runApp(const TicTacToe());
@@ -10,283 +10,279 @@ class TicTacToe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const primaryColor = Color.fromARGB(255, 255, 255, 255);
-    const textColor = Color.fromARGB(255, 28, 41, 66);
-    const secondaryColor = Color.fromARGB(255, 17, 96, 89);
-    const backColor = Color.fromARGB(255, 155, 205, 207);
-
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme:
-            ColorScheme.fromSwatch(backgroundColor: backColor).copyWith(
-          primary: primaryColor,
-          secondary: secondaryColor,
-          onPrimary: textColor,
-          onSecondary: textColor,
+        primaryColor: const Color(0xFF137C8B), // #137C8B
+        hintColor: const Color(0xFF709CA7), // #709CA7
+        colorScheme:const  ColorScheme(
+          background: Color(0xFFB8CBD0), // #B8CBD0
+          surface: Color(0xFFB8CBD0), // #B8CBD0
+          onBackground: Color(0xFF7A90A4), // #7A90A4
+          onSurface: Color(0xFF344D59), // #344D59
+          brightness: Brightness.light,
+          primary: Color(0xFF137C8B),
+          onPrimary: Colors.white,
+          secondary: Color(0xFF709CA7),
+          onSecondary: Colors.white,
+          error: Color(0xFFEF5350),
+          onError: Colors.white,
         ),
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: secondaryColor,
-          title: const Text(
-            'Tic Tak Toe',
-            style: TextStyle(fontWeight: FontWeight.bold, color: primaryColor),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        body: TicTacToeBoard(),
-      ),
+      home: const ColorSelectionPage(),
     );
   }
 }
 
-class TicTacToeBoard extends StatefulWidget {
-  @override
-  _TicTacToeBoardState createState() => _TicTacToeBoardState();
-}
+// class ColorSelectionWidget extends StatelessWidget {
+//   final Color selectedColor;
+//   final ValueChanged<Color> onColorSelected;
 
-class _TicTacToeBoardState extends State<TicTacToeBoard> {
-  late List<List<String>> board;
-  late String currentPlayer;
-  late bool gameOver;
+//   const ColorSelectionWidget({
+//     super.key,
+//     required this.selectedColor,
+//     required this.onColorSelected,
+//   });
 
-  final primaryColor = Color.fromARGB(255, 255, 255, 255);
-  final textColor = Color.fromARGB(255, 28, 41, 66);
-  final secondaryColor = Color.fromARGB(255, 17, 96, 89);
-  final backColor = Color.fromARGB(255, 155, 205, 207);
-  final xColor = Color.fromARGB(255, 160, 118, 26);
-  final oColor = Color.fromARGB(255, 208, 84, 38);
-  @override
-  void initState() {
-    super.initState();
-    initializeBoard();
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         for (Color color in [
+//           Colors.red,
+//           Colors.green,
+//           Colors.blue,
+//           Colors.yellow,
+//           Colors.orange,
+//           Colors.purple,
+//         ])
+//           GestureDetector(
+//             onTap: () {
+//               onColorSelected(color);
+//             },
+//             child: Container(
+//               width: 40,
+//               height: 40,
+//               margin: const EdgeInsets.all(5),
+//               decoration: BoxDecoration(
+//                 color: color,
+//                 border: Border.all(
+//                   color: selectedColor == color
+//                       ? Colors.white
+//                       : Colors.transparent,
+//                   width: 2,
+//                 ),
+//               ),
+//             ),
+//           ),
+//       ],
+//     );
+//   }
+// }
 
-  void initializeBoard() {
-    board = List.generate(3, (_) => List.filled(3, ''));
-    currentPlayer = 'X';
-    gameOver = false;
-  }
+// //Choix de couleurs et equuip
+// class PlayerSelectionScreen extends StatefulWidget {
+//   const PlayerSelectionScreen({super.key});
 
-  void playMove(int row, int col) {
-    final primaryColor = Color.fromARGB(255, 255, 255, 255);
-    final textColor = Color.fromARGB(255, 28, 41, 66);
-    final secondaryColor = Color.fromARGB(255, 17, 96, 89);
+//   @override
+//   _PlayerSelectionScreenState createState() => _PlayerSelectionScreenState();
+// }
 
-    //SI le jeu n'est pas terminé et que la case touché n'est pas vide
-    if (!gameOver && board[row][col] == '') {
-      setState(() {
-        board[row][col] = currentPlayer;
-        //Mise a jour de la touche
+// class _PlayerSelectionScreenState extends State<PlayerSelectionScreen> {
+//   late TextEditingController player1Controller;
+//   late TextEditingController player2Controller;
+//   Color player1Color = const Color(0xFF137C8B);
+//   Color player2Color = const Color(0xFF709CA7);
 
-        //Verification de s'il n'ya pas de vainqueur
-        if (checkForWinner(row, col)) {
-          gameOver = true;
-          //Si le jeu est terminer et qu'il ya un vainqueur
+//   @override
+//   void initState() {
+//     super.initState();
+//     player1Controller = TextEditingController();
+//     player2Controller = TextEditingController();
+//   }
 
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: primaryColor,
-                title: const Text(
-                  'Game Over',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 32, 198, 137),
-                      fontWeight: FontWeight.bold),
-                ),
-                content: Text('Victoire des $currentPlayer',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                    )),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      initializeBoard();
-                    },
-                    child: Text(
-                      'Rejouer',
-                      style: TextStyle(color: secondaryColor),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-          //Boite de Dialogue dans le cas ou il ya une victoire
-        } else if (checkForDraw()) {
-          gameOver = true;
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                backgroundColor: primaryColor,
-                title: const Text(
-                  'Game Over',
-                  style: TextStyle(
-                      color: Color.fromARGB(255, 32, 198, 137),
-                      fontWeight: FontWeight.bold),
-                ),
-                content: Text('Partie nulle',
-                    style: TextStyle(
-                      fontSize: 25,
-                      color: textColor,
-                      fontWeight: FontWeight.bold,
-                    )),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      initializeBoard();
-                    },
-                    child: Text('Play Again'),
-                  ),
-                ],
-              );
-            },
-          );
-        } else {
-          currentPlayer = (currentPlayer == 'X') ? 'O' : 'X';
-        }
-      });
-    }
-  }
+//   @override
+//   void dispose() {
+//     player1Controller.dispose();
+//     player2Controller.dispose();
+//     super.dispose();
+//   }
 
-//Verifier s'il ya un vainqueur
-  bool checkForWinner(int row, int col) {
-    String player = board[row][col];
-    bool won = true;
+//   void startGame() {
+//     if (player1Controller.text.isNotEmpty &&
+//         player2Controller.text.isNotEmpty) {
+//       Navigator.push(
+//         context,
+//         MaterialPageRoute(
+//           builder: (context) => TicTacToeGameScreen(
+//             player1Name: player1Controller.text,
+//             player2Name: player2Controller.text,
+//             player1Color: player1Color,
+//             player2Color: player2Color,
+//           ),
+//         ),
+//       );
+//     } else {
+//       // Show a dialog to inform the user to enter player names
+//       showDialog(
+//         context: context,
+//         builder: (context) {
+//           return AlertDialog(
+//             title: const Text('Please enter player names'),
+//             actions: [
+//               TextButton(
+//                 onPressed: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: const Text('OK'),
+//               ),
+//             ],
+//           );
+//         },
+//       );
+//     }
+//   }
 
-    // Check row
-    for (int i = 0; i < 3; i++) {
-      if (board[row][i] != player) {
-        won = false;
-        break;
-      }
-    }
-    if (won) return true;
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Player Selection'),
+//       ),
+//       body: Padding(
+//         padding: const EdgeInsets.all(20.0),
+//         child: Column(
+//           children: [
+//             TextField(
+//               controller: player1Controller,
+//               decoration: const InputDecoration(
+//                 labelText: 'Player 1 Name',
+//               ),
+//             ),
+//             const SizedBox(height: 20),
+//             // Player 1 color selection
+//             ColorSelectionWidget(
+//               selectedColor: player1Color,
+//               onColorSelected: (color) {
+//                 setState(() {
+//                   player1Color = color;
+//                 });
+//               },
+//             ),
+//             const SizedBox(height: 20),
+//             TextField(
+//               controller: player2Controller,
+//               decoration: const InputDecoration(
+//                 labelText: 'Player 2 Name',
+//               ),
+//             ),
+//             const SizedBox(height: 20),
+//             // Player 2 color selection
+//             ColorSelectionWidget(
+//               selectedColor: player2Color,
+//               onColorSelected: (color) {
+//                 setState(() {
+//                   player2Color = color;
+//                 });
+//               },
+//             ),
+//             const SizedBox(height: 20),
+//             ElevatedButton(
+//               onPressed: startGame,
+//               child: const Text('Start Game'),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-    // Check column
-    won = true;
-    for (int i = 0; i < 3; i++) {
-      if (board[i][col] != player) {
-        won = false;
-        break;
-      }
-    }
-    if (won) return true;
+// class TicTacToeGameScreen extends StatefulWidget {
+//   final String player1Name;
+//   final String player2Name;
+//   final Color player1Color;
+//   final Color player2Color;
 
-    // Check diagonals
-    if (row == col) {
-      won = true;
-      for (int i = 0; i < 3; i++) {
-        if (board[i][i] != player) {
-          won = false;
-          break;
-        }
-      }
-      if (won) return true;
-    }
+//   const TicTacToeGameScreen({
+//     super.key,
+//     required this.player1Name,
+//     required this.player2Name,
+//     required this.player1Color,
+//     required this.player2Color,
+//   });
 
-    if (row + col == 2) {
-      won = true;
-      for (int i = 0; i < 3; i++) {
-        if (board[i][2 - i] != player) {
-          won = false;
-          break;
-        }
-      }
-      if (won) return true;
-    }
+//   @override
+//   _TicTacToeGameScreenState createState() => _TicTacToeGameScreenState();
+// }
 
-    return false;
-  }
+// class _TicTacToeGameScreenState extends State<TicTacToeGameScreen> {
+//   late List<List<String>> board;
+//   late String currentPlayer;
+//   late Color currentColor;
+//   late bool gameOver;
 
-//Verifier s'il y aun null
-  bool checkForDraw() {
-    for (int i = 0; i < 3; i++) {
-      for (int j = 0; j < 3; j++) {
-        if (board[i][j] == '') {
-          return false;
-        }
-      }
-    }
-    return true;
-  }
+//   @override
+//   void initState() {
+//     super.initState();
+//     initializeBoard();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(15, 5, 15, 5), //Padding
+//   void initializeBoard() {
+//     board = List.generate(3, (_) => List.filled(3, ''));
+//     currentPlayer = 'X';
+//     gameOver = false;
+//   }
 
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Au tour de :',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '$currentPlayer',
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: oColor),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 9, //9 cases
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              int row = index ~/ 3; //3lignes
-              int col = index % 3; //3 Colones
-              return GestureDetector(
-                onTap: () => playMove(
-                    row, col), //Prends en parametre les cordonées de la cases
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color.fromARGB(255, 17, 96, 89)),
-                    color: const Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  child: Center(
-                    child: Text(
-                      board[row][col],
-                      style: TextStyle(fontSize: 40.0),
-                    ),
-                  ),
-                ),
-              ); //Chaque cases
-            },
-          ),
-          const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Au tour de :',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                '$currentPlayer',
-                style: TextStyle(
-                    fontSize: 20, fontWeight: FontWeight.bold, color: xColor),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-}
+ 
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(20.0),
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Row(
+//             mainAxisAlignment: MainAxisAlignment.center,
+//             children: [
+//               Text(
+//                 'Current Player: $currentPlayer',
+//                 style:
+//                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+//               ),
+//             ],
+//           ),
+//           const SizedBox(height: 20),
+//           GridView.builder(
+//             physics: const NeverScrollableScrollPhysics(),
+//             shrinkWrap: true,
+//             itemCount: 9,
+//             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//               crossAxisCount: 3,
+//             ),
+//             itemBuilder: (BuildContext context, int index) {
+//               int row = index ~/ 3;
+//               int col = index % 3;
+
+//               return GestureDetector(
+//                 onTap: () => playMove(row, col),
+//                 child: Container(
+//                   decoration: BoxDecoration(
+//                     border: Border.all(color: Colors.black),
+//                   ),
+//                   child: Center(
+//                     child: Text(
+//                       board[row][col],
+//                       style: const TextStyle(fontSize: 40.0),
+//                     ),
+//                   ),
+//                 ),
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
