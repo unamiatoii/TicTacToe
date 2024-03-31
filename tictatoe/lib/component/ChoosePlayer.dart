@@ -8,22 +8,22 @@ class NameAndColorPickerInput extends StatelessWidget {
   final ValueChanged<Color> onColorChanged;
 
   const NameAndColorPickerInput({
-    Key? key,
+    super.key,
     required this.nameController,
     required this.nameLabelText,
     required this.selectedColor,
     required this.availableColors,
     required this.onColorChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
-            color: Color.fromRGBO(23, 91, 111, 0.3),
+            color: Theme.of(context).colorScheme.secondary,
             borderRadius: BorderRadius.circular(8)),
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,17 +32,18 @@ class NameAndColorPickerInput extends StatelessWidget {
                 controller: nameController,
                 decoration: InputDecoration(
                   labelText: nameLabelText,
-                  prefixIcon:
-                      Icon(Icons.person_outline), // Ajout du préfixe d'icône
+                  prefixIcon: const Icon(Icons.person_outline),
                   border: OutlineInputBorder(
-                    // Ajout de la bordure
                     borderRadius: BorderRadius.circular(10),
-                    borderSide:
-                        BorderSide(color: Colors.grey), // Couleur de la bordure
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
+                  filled: true, // Activez le remplissage du champ de texte
+                  fillColor: Theme.of(context)
+                      .primaryColor, // Utilisez la couleur primaire du thème
                 ),
               ),
-              SizedBox(height: 10),
+
+              const SizedBox(height: 10),
               // Color picker
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
