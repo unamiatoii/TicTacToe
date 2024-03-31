@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:tictatoe/Pages/DifficultySelectionPage.dart'; // Importez la page suivante ici
+import 'package:flutter/material.dart';// Importez la page suivante ici
+import 'package:tictatoe/Pages/PlayerSelection.dart';
 import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
 import 'package:tictatoe/function/ChangePage.dart';
@@ -110,6 +110,6 @@ class GameModeSelectionPage extends StatelessWidget {
 
   // Fonction pour naviguer vers la page de sélection de la difficulté avec le mode choisi
   void _navigateToDifficultySelectionPage(BuildContext context, int mode) {
-    navigateToPage(context, DifficultySelectionPage(mode: mode));
+    navigateToPage(context, PlayerSelectionPage(mode: mode));
   }
 }

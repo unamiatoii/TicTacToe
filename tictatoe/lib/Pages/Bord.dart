@@ -5,22 +5,22 @@ import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/function/Logic.dart'; // Importez le fichier contenant la logique du jeu
 
 class TicTacToeBoard extends StatefulWidget {
+  final int mode;
   final String player1Name;
   final String player2Name;
   final Color player1Color;
   final Color player2Color;
-  final int difficultyLevel; // Nouveau paramètre pour le niveau de difficulté
-  final int mode; // Nouveau paramètre pour le mode de jeu
+  final int boardSize;
 
   const TicTacToeBoard({
     Key? key,
+    required this.mode,
     required this.player1Name,
     required this.player2Name,
     required this.player1Color,
     required this.player2Color,
-    required this.difficultyLevel,
-    required this.mode, // Ajout du mode de jeu
-  });
+    required this.boardSize,
+  }) : super(key: key);
 
   @override
   _TicTacToeBoardState createState() => _TicTacToeBoardState();
@@ -32,9 +32,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
   @override
   void initState() {
     super.initState();
-    // Initialise le plateau de jeu en fonction du niveau de difficulté
-    gameLogic = GameLogic(gridSize: widget.difficultyLevel);
-    // Si le mode est 2 (contre l'ordinateur) et c'est au tour de l'ordinateur, joue un coup
+    gameLogic = GameLogic(gridSize: widget.boardSize);
     if (widget.mode == 2 && !gameLogic.player1Turn) {
       _playComputerMove();
     }
@@ -51,26 +49,24 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
           padding: const EdgeInsets.all(20.0),
           decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
-            borderRadius: BorderRadius.circular(
-              20.0,
-            ), // Bordures arrondies du grand carré
+            borderRadius: BorderRadius.circular(20.0),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: const Offset(0, 3), // Position de l'ombre
+                offset: const Offset(0, 3),
               ),
             ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              widget.difficultyLevel,
+              widget.boardSize,
               (row) => Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
-                  widget.difficultyLevel,
+                  widget.boardSize,
                   (col) => GestureDetector(
                     onTap: () {
                       _playMove(row, col);
@@ -117,20 +113,19 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
         } else if (gameLogic.checkForDraw()) {
           _showGameOverDialog('Match nul');
         } else if (widget.mode == 2 && !gameLogic.player1Turn) {
-          _playComputerMove(); // Si le mode est 2 (contre l'ordinateur) et c'est au tour de l'ordinateur, joue un coup
+          _playComputerMove();
         }
       }
     });
   }
 
   void _playComputerMove() {
-    // Attendez un bref délai pour l'animation avant que l'ordinateur ne joue
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 150), () {
       final Random random = Random();
       int randomRow, randomCol;
       do {
-        randomRow = random.nextInt(widget.difficultyLevel);
-        randomCol = random.nextInt(widget.difficultyLevel);
+        randomRow = random.nextInt(widget.boardSize);
+        randomCol = random.nextInt(widget.boardSize);
       } while (gameLogic.board[randomRow][randomCol] != ' ');
       _playMove(randomRow, randomCol);
     });
@@ -163,7 +158,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
               },
               child: const Row(
                 children: [
-                  Icon(Icons.refresh), // Icône de rafraîchissement
+                  Icon(Icons.refresh),
                   SizedBox(width: 4),
                   Text(
                     'k',

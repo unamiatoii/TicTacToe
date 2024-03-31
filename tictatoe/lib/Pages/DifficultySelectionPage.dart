@@ -1,13 +1,24 @@
-import 'package:flutter/material.dart';// Importez la page suivante ici
-import 'package:tictatoe/Pages/PlayerSelection.dart';
+import 'package:flutter/material.dart'; // Importez la page suivante ici
+import 'package:tictatoe/Pages/Bord.dart';
 import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
 import 'package:tictatoe/function/ChangePage.dart';
 
 class DifficultySelectionPage extends StatelessWidget {
   final int mode;
+  final String player1Name;
+  final String player2Name;
+  final Color player1Color;
+  final Color player2Color;
 
-  const DifficultySelectionPage({Key? key, required this.mode});
+  const DifficultySelectionPage({
+    Key? key,
+    required this.mode,
+    required this.player1Name,
+    required this.player2Name,
+    required this.player1Color,
+    required this.player2Color,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,13 +39,13 @@ class DifficultySelectionPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   _buildDifficultyButton(context, '3x3', 3, () {
-                    _navigateToColorSelectionPage(context, 3);
+                    _navigateToGameBoardPage(context, 3);
                   }),
                   _buildDifficultyButton(context, '4x4', 4, () {
-                    _navigateToColorSelectionPage(context, 4);
+                    _navigateToGameBoardPage(context, 4);
                   }),
                   _buildDifficultyButton(context, '5x5', 5, () {
-                    _navigateToColorSelectionPage(context, 5);
+                    _navigateToGameBoardPage(context, 5);
                   }),
                 ],
               ),
@@ -98,8 +109,17 @@ class DifficultySelectionPage extends StatelessWidget {
     );
   }
 
-  // Fonction pour naviguer vers la page de sélection des couleurs des joueurs avec la taille du plateau
-  void _navigateToColorSelectionPage(BuildContext context, int boardSize) {
-    navigateToPage(context, ColorSelectionPage(mode: mode, boardSize: boardSize));
+  void _navigateToGameBoardPage(BuildContext context, int boardSize) {
+    navigateToPage(
+      context,
+      TicTacToeBoard(
+        mode: mode,
+        player1Name: player1Name,
+        player2Name: player2Name,
+        player1Color: player1Color,
+        player2Color: player2Color,
+        boardSize: boardSize,
+      ),
+    );
   }
 }
