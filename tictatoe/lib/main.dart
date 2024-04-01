@@ -9,7 +9,7 @@ void main() {
 }
 
 class TicTacToe extends StatelessWidget {
-  const TicTacToe({Key? key}) : super(key: key);
+  const TicTacToe({super.key});
 
   @override
   Widget build(BuildContext context) {

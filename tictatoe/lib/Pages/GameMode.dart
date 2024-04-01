@@ -13,7 +13,7 @@ class GameModeSelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Choix du mode",
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -125,8 +125,8 @@ class GameModeSelectionPage extends StatelessWidget {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Fonctionnalité à venir'),
-          content: Text('La fonctionnalité sera disponible bientôt.'),
+          title: const Text('Fonctionnalité à venir'),
+          content: const Text('La fonctionnalité sera disponible bientôt.'),
           actions: <Widget>[
             TextButton(
               onPressed: () {

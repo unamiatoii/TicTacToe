@@ -6,6 +6,8 @@ import 'package:tictatoe/Pages/Historydart';
 import 'package:tictatoe/Pages/Setting.dart';
 
 class CustomBottomAppBar extends StatelessWidget {
+  const CustomBottomAppBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -65,7 +67,7 @@ class CustomBottomAppBar extends StatelessWidget {
                     pageIndexNotifier.setPageIndex(2);
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SettingsPage()),
+                      MaterialPageRoute(builder: (context) => const SettingsPage()),
                     );
                   },
                 ),

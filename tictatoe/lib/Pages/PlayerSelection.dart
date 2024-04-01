@@ -58,7 +58,7 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar:  CustomBottomAppBar(),
+      bottomNavigationBar:  const CustomBottomAppBar(),
       appBar: const RoundedAppBar(
         title: "Choix des joueurs",
       ),

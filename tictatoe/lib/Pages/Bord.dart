@@ -13,14 +13,14 @@ class TicTacToeBoard extends StatefulWidget {
   final int boardSize;
 
   const TicTacToeBoard({
-    Key? key, // Ajout de la clé pour le widget
+    super.key, // Ajout de la clé pour le widget
     required this.mode,
     required this.player1Name,
     required this.player2Name,
     required this.player1Color,
     required this.player2Color,
     required this.boardSize,
-  }) : super(key: key); // Utilisation de la clé fournie
+  }); // Utilisation de la clé fournie
 
   @override
   _TicTacToeBoardState createState() => _TicTacToeBoardState();
@@ -48,7 +48,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
     }
 
     return Scaffold(
-      bottomNavigationBar:  CustomBottomAppBar(),
+      bottomNavigationBar:  const CustomBottomAppBar(),
       appBar: const RoundedAppBar(
         title: "Tic Tac Toe",
       ),
@@ -178,7 +178,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
           content: Text(
             '$winner !',
             textAlign: TextAlign.right, // Aligner le texte à gauche
-            style: TextStyle(fontSize: 28, color: Colors.green),
+            style: const TextStyle(fontSize: 28, color: Colors.green),
           ),
           actions: <Widget>[
             TextButton(
@@ -205,7 +205,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                     size: 25,
                     color: Theme.of(context).colorScheme.surface,
                   ),
-                  SizedBox(width: 4),
+                  const SizedBox(width: 4),
                 ],
               ),
             ),

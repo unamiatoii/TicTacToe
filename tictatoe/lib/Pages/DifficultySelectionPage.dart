@@ -26,7 +26,7 @@ class DifficultySelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Niveau de difficulté",
       ),
-      bottomNavigationBar:  CustomBottomAppBar(),
+      bottomNavigationBar:  const CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

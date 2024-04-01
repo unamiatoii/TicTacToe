@@ -7,17 +7,19 @@ import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
 
 class SettingsPage extends StatelessWidget {
+  const SettingsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const RoundedAppBar(
         title: 'Paramètres',
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: Center(
         child: Container(
           height: 200,
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -107,7 +109,7 @@ class SettingsPage extends StatelessWidget {
   }
 
   Future<void> _showDeleteDataConfirmationDialog(BuildContext context) async {
-    bool _isLoading = false; // Variable pour suivre l'état de chargement
+    bool isLoading = false; // Variable pour suivre l'état de chargement
 
     return showDialog<void>(
       context: context,
@@ -116,8 +118,8 @@ class SettingsPage extends StatelessWidget {
           builder: (BuildContext context, StateSetter setState) {
             return AlertDialog(
               title: const Text('Supprimer les données'),
-              content: _isLoading
-                  ? Center(
+              content: isLoading
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : const Text(
@@ -130,21 +132,21 @@ class SettingsPage extends StatelessWidget {
                   },
                 ),
                 TextButton(
-                  child: Text(
-                    'Supprimer',
-                    style:
-                        TextStyle(color: Theme.of(context).colorScheme.error),
-                  ),
-                  onPressed: _isLoading
+                  onPressed: isLoading
                       ? null // Désactiver le bouton pendant le chargement
                       : () async {
                           setState(() {
-                            _isLoading =
+                            isLoading =
                                 true; // Activer l'animation de chargement
                           });
                           await _deleteData();
                           Navigator.of(context).pop();
                         },
+                  child: Text(
+                    'Supprimer',
+                    style:
+                        TextStyle(color: Theme.of(context).colorScheme.error),
+                  ),
                 ),
               ],
             );
