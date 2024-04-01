@@ -1,8 +1,8 @@
-import 'dart:math'; // Importez cette bibliothèque pour générer des nombres aléatoires
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:tictatoe/component/AppBar.dart';
-import 'package:tictatoe/function/Logic.dart'; // Importez le fichier contenant la logique du jeu
+import 'package:tictatoe/component/BottomAppBar.dart';
+import 'package:tictatoe/function/Logic.dart';
 
 class TicTacToeBoard extends StatefulWidget {
   final int mode;
@@ -13,14 +13,14 @@ class TicTacToeBoard extends StatefulWidget {
   final int boardSize;
 
   const TicTacToeBoard({
-    Key? key,
+    Key? key, // Ajout de la clé pour le widget
     required this.mode,
     required this.player1Name,
     required this.player2Name,
     required this.player1Color,
     required this.player2Color,
     required this.boardSize,
-  }) : super(key: key);
+  }) : super(key: key); // Utilisation de la clé fournie
 
   @override
   _TicTacToeBoardState createState() => _TicTacToeBoardState();
@@ -40,56 +40,69 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
 
   @override
   Widget build(BuildContext context) {
+    double cellSize = 100.0; // Taille par défaut des cases
+    if (widget.boardSize == 4) {
+      cellSize = 80.0; // Réduire la taille des cases pour 4x4
+    } else if (widget.boardSize == 5) {
+      cellSize = 60.0; // Réduire encore plus la taille pour 5x5
+    }
+
     return Scaffold(
+      bottomNavigationBar: const CustomBottomAppBar(),
       appBar: const RoundedAppBar(
-        title: "THE MORPION GAME",
+        title: "Tic Tac Toe",
       ),
       body: Center(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
-            borderRadius: BorderRadius.circular(20.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
-                spreadRadius: 5,
-                blurRadius: 7,
-                offset: const Offset(0, 3),
-              ),
-            ],
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              widget.boardSize,
-              (row) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  widget.boardSize,
-                  (col) => GestureDetector(
-                    onTap: () {
-                      _playMove(row, col);
-                    },
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: gameLogic.board[row][col] == 'X'
-                            ? widget.player1Color
-                            : gameLogic.board[row][col] == 'O'
-                                ? widget.player2Color
-                                : Colors.white,
-                        border: Border.all(color: Colors.black),
-                      ),
-                      child: Center(
-                        child: Text(
-                          gameLogic.board[row][col],
-                          style: const TextStyle(
-                            fontSize: 40,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+        child: Material(
+          elevation: 3, // Définir l'élévation ici
+          borderRadius: BorderRadius.circular(
+              20.0), // Assurez-vous de définir le même rayon de bordure que dans le BoxDecoration
+          child: Container(
+            padding: const EdgeInsets.all(20.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                widget.boardSize,
+                (row) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    widget.boardSize,
+                    (col) => GestureDetector(
+                      onTap: () {
+                        _playMove(row, col);
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        width: cellSize,
+                        height: cellSize,
+                        decoration: BoxDecoration(
+                          color: gameLogic.board[row][col] == 'X'
+                              ? widget.player1Color
+                              : gameLogic.board[row][col] == 'O'
+                                  ? widget.player2Color
+                                  : Colors.white,
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Center(
+                          child: Text(
+                            gameLogic.board[row][col],
+                            style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -120,19 +133,25 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
   }
 
   void _playComputerMove() {
-    Future.delayed(const Duration(milliseconds: 150), () {
+    // Définir la durée de jeu de l'ordinateur
+    const computerMoveDuration = Duration(milliseconds: 300);
+
+    // Attendre la durée spécifiée avant de jouer le coup de l'ordinateur
+    Future.delayed(computerMoveDuration, () {
       final Random random = Random();
       int randomRow, randomCol;
       do {
         randomRow = random.nextInt(widget.boardSize);
         randomCol = random.nextInt(widget.boardSize);
       } while (gameLogic.board[randomRow][randomCol] != ' ');
+
+      // Appeler la méthode _playMove à l'intérieur de la fonction anonyme
       _playMove(randomRow, randomCol);
     });
   }
 
   void _showGameOverDialog(String winner) {
-    String title = winner == 'Match nul' ? 'Match nul' : 'And the winner is';
+    String title = winner == 'Match nul' ? 'Match nul' : 'Le vainqueur est...';
     IconData icon = winner == 'Match nul'
         ? Icons.sentiment_neutral
         : Icons.sentiment_satisfied;
@@ -141,29 +160,43 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: Theme.of(context).colorScheme.background,
           title: Row(
             children: [
-              Icon(icon),
+              Icon(
+                icon,
+                size: 40,
+                color: Colors.green,
+              ),
               const SizedBox(width: 8),
               Text(title),
             ],
           ),
-          content: Text('$winner !'),
+          content: Text(
+            '$winner !',
+            textAlign: TextAlign.right, // Aligner le texte à gauche
+            style: TextStyle(fontSize: 28, color: Colors.green),
+          ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                gameLogic.endGame(
+                    winner,
+                    widget.player1Name,
+                    widget
+                        .player2Name); // Enregistrer les données de la partie terminée
                 gameLogic.initializeBoard();
               },
-              child: const Row(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Icon(Icons.refresh),
-                  SizedBox(width: 4),
-                  Text(
-                    'k',
-                    style: TextStyle(fontFamily: "GessWho"),
+                  Icon(
+                    Icons.refresh,
+                    size: 25,
+                    color: Theme.of(context).colorScheme.surface,
                   ),
+                  SizedBox(width: 4),
                 ],
               ),
             ),

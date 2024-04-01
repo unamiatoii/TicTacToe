@@ -1,0 +1,115 @@
+import 'dart:convert';
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:tictatoe/component/AppBar.dart';
+import 'package:tictatoe/component/BottomAppBar.dart';
+import 'dart:async' show Future;
+import 'package:flutter/services.dart' show rootBundle;
+
+// Classe de données pour représenter une partie
+class GameHistory {
+  final String player1;
+  final String player2;
+  final String result;
+  final DateTime date;
+  final Color color; // Ajouter une couleur à la classe GameHistory
+
+  GameHistory({
+    required this.player1,
+    required this.player2,
+    required this.result,
+    required this.date,
+    required this.color, // Mettre à jour le constructeur
+  });
+}
+
+class GameHistoryPage extends StatelessWidget {
+  // Charger les données depuis le fichier JSON
+  Future<List<GameHistory>> loadHistoryData() async {
+    String jsonString = await rootBundle.loadString('lib/data/history.json');
+    List<dynamic> jsonData = json.decode(jsonString);
+    List<GameHistory> historyData = [];
+    // Définir une liste de couleurs prédéfinies
+    List<Color> colors = [
+      Colors.green,
+    ];
+    Random random = Random(); // Créer une instance de Random
+    jsonData.forEach((game) {
+      // Sélectionner aléatoirement une couleur de la liste
+      Color color = colors[random.nextInt(colors.length)];
+      historyData.add(GameHistory(
+        player1: game['player1'],
+        player2: game['player2'],
+        result: game['result'],
+        date: DateTime.parse(game['date']),
+        color: color, // Passer la couleur à l'objet GameHistory
+      ));
+    });
+    return historyData;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      
+      appBar: RoundedAppBar(
+        title: 'Historique des parties',
+      ),
+      bottomNavigationBar: CustomBottomAppBar(),
+      body: FutureBuilder<List<GameHistory>>(
+        future: loadHistoryData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Erreur de chargement des données'));
+          } else {
+            List<GameHistory>? history = snapshot.data;
+            if (history != null && history.isNotEmpty) {
+              return ListView.builder(
+                itemCount: history.length,
+                itemBuilder: (context, index) {
+                  final game = history[index];
+                  return _buildGameListItem(game);
+                },
+              );
+            } else {
+              return Center(child: Text('Aucune donnée disponible'));
+            }
+          }
+        },
+      ),
+    );
+  }
+
+  // Widget pour afficher un élément de partie de manière esthétique
+  Widget _buildGameListItem(GameHistory game) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0), // Arrondir les bords
+      ),
+      elevation: 4,
+      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: ListTile(
+        title: Text(
+          '${game.player1} vs ${game.player2}',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        subtitle: Text(
+          'Résultat: ${game.result}\nDate: ${_formatDate(game.date)}',
+        ),
+        trailing: Icon(Icons.arrow_forward_ios),
+        tileColor: game.color, // Utiliser la couleur associée à la partie
+        onTap: () {
+          // Implémentez une action lorsque l'utilisateur clique sur un élément de partie
+          // Par exemple, ouvrir une page de détails de la partie
+        },
+      ),
+    );
+  }
+
+  // Fonction pour formater la date dans un format convivial
+  String _formatDate(DateTime date) {
+    return '${date.day}/${date.month}/${date.year}';
+  }
+}

@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';// Importez la page suivante ici
+import 'package:flutter/material.dart'; // Importez la page suivante ici
 import 'package:tictatoe/Pages/PlayerSelection.dart';
 import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
 import 'package:tictatoe/function/ChangePage.dart';
 
 class GameModeSelectionPage extends StatelessWidget {
-  const GameModeSelectionPage({Key? key});
+  const GameModeSelectionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +13,7 @@ class GameModeSelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Choix du mode",
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -30,16 +30,19 @@ class GameModeSelectionPage extends StatelessWidget {
                   // Boutons pour choisir le mode de jeu
                   _buildGameModeButton(context, 'Jouer à deux', Icons.person,
                       () {
-                    _navigateToDifficultySelectionPage(context, 1); // Mode 1: Jouer à deux
+                    _navigateToDifficultySelectionPage(
+                        context, 1); // Mode 1: Jouer à deux
                   }),
 
-                  _buildGameModeButton(context, 'Contre robot',
-                      Icons.laptop_mac_outlined, () {
-                    _navigateToDifficultySelectionPage(context, 2); // Mode 2: Contre robot
+                  _buildGameModeButton(
+                      context, 'Contre robot', Icons.laptop_mac_outlined, () {
+                    _navigateToDifficultySelectionPage(
+                        context, 2); // Mode 2: Contre robot
                   }),
 
                   _buildGameModeButton(context, 'En réseau', Icons.wifi, () {
-                    _navigateToDifficultySelectionPage(context, 3); // Mode 3: En réseau
+                    _navigateToDifficultySelectionPage(
+                        context, 3); // Mode 3: En réseau
                   }),
                 ],
               ),

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:tictatoe/Pages/GameMode.dart';
+import 'package:tictatoe/Pages/Historydart';
+import 'package:tictatoe/function/ChangePage.dart';
 
 class CustomBottomAppBar extends StatefulWidget {
   final List<VoidCallback?>? onPressed;
 
-  const CustomBottomAppBar({Key? key, this.onPressed}) : super(key: key);
+  const CustomBottomAppBar({super.key, this.onPressed});
 
   @override
   _CustomBottomAppBarState createState() => _CustomBottomAppBarState();
@@ -28,22 +31,25 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
           children: [
             IconButton(
               icon: Icon(
-                Icons.home,
+                Icons.gamepad_outlined,
                 color: _selectedIndex == 0 ? Colors.white : Colors.grey,
               ),
               onPressed: () {
                 setState(() {
                   _selectedIndex = 0;
+                  navigateToPage(context, const GameModeSelectionPage());
                 });
                 if (widget.onPressed != null) widget.onPressed![0]?.call();
               },
             ),
             IconButton(
               icon: Icon(
-                Icons.search,
+                Icons.history,
                 color: _selectedIndex == 1 ? Colors.white : Colors.grey,
               ),
               onPressed: () {
+                navigateToPage(context, GameHistoryPage());
+
                 setState(() {
                   _selectedIndex = 1;
                 });

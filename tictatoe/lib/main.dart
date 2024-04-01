@@ -24,7 +24,7 @@ class TicTacToe extends StatelessWidget {
           brightness: Brightness.light,
           primary: Color.fromRGBO(185, 204, 234, 1),
           onPrimary: Colors.white,
-          secondary: const Color.fromRGBO(17, 20, 26, 1),
+          secondary: Color.fromRGBO(17, 20, 26, 1),
           onSecondary: Colors.white,
           error: Color(0xFFEF5350),
           onError: Colors.white,

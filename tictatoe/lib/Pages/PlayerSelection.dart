@@ -8,7 +8,7 @@ import 'package:tictatoe/function/ChangePage.dart';
 class PlayerSelectionPage extends StatefulWidget {
   final int mode;
 
-  const PlayerSelectionPage({Key? key, required this.mode}) : super(key: key);
+  const PlayerSelectionPage({super.key, required this.mode});
   @override
   _PlayerSelectionPageState createState() => _PlayerSelectionPageState();
 }
@@ -34,12 +34,16 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
 
   final double _verticalSpacing = 40.0;
 
+  // Définir les données de l'ordinateur par défaut
+  final String _computerName = 'Ordinateur';
+  final Color _computerColor = Colors.grey;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       appBar: const RoundedAppBar(
-        title: "Choix des joueur",
+        title: "Choix des joueurs",
       ),
       body: Center(
         // Enveloppez SingleChildScrollView avec Center
@@ -75,43 +79,69 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                     });
                   },
                 ),
-              SizedBox(height: 100),
+              // Afficher les options pour l'ordinateur uniquement si le mode est 2
+              if (widget.mode == 2) ...[
+                SizedBox(height: _verticalSpacing),
+                NameAndColorPickerInput(
+                  nameController: TextEditingController(text: _computerName),
+                  nameLabelText: "Ordinateur",
+                  selectedColor: _computerColor,
+                  availableColors: _availableColors,
+                  onColorChanged: (color) {
+                    // Vous pouvez choisir de ne pas mettre à jour la couleur de l'ordinateur ici
+                  },
+                ),
+              ],
+              const SizedBox(height: 100),
               Padding(
-                padding: EdgeInsets.fromLTRB(40, 5, 20, 40),
+                padding: const EdgeInsets.fromLTRB(40, 5, 20, 40),
                 child: ElevatedButton(
                   onPressed: () {
-                    final playerName = _player1Controller.text;
-                    if (playerName.isNotEmpty) {
+                    if (widget.mode == 2) {
+                      // Si le mode est 2, utiliser les données de l'ordinateur
                       navigateToPage(
                         context,
                         DifficultySelectionPage(
                           mode: widget.mode,
                           player1Name: _player1Controller.text,
-                          player2Name: _player2Controller.text,
+                          player2Name: _computerName,
                           player1Color: _player1Color,
-                          player2Color: _player2Color,
+                          player2Color: _computerColor,
                         ),
                       );
-                      ;
                     } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Text("Attention"),
-                            content:
-                                Text("Veuillez saisir le nom du Joueur 1."),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text("OK"),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      final playerName = _player1Controller.text;
+                      if (playerName.isNotEmpty) {
+                        navigateToPage(
+                          context,
+                          DifficultySelectionPage(
+                            mode: widget.mode,
+                            player1Name: _player1Controller.text,
+                            player2Name: _player2Controller.text,
+                            player1Color: _player1Color,
+                            player2Color: _player2Color,
+                          ),
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text("Attention"),
+                              content:
+                                  const Text("Veuillez saisir le nom du Joueur 1."),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("OK"),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
                     }
                   },
                   style: ElevatedButton.styleFrom(

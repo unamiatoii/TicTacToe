@@ -12,13 +12,13 @@ class DifficultySelectionPage extends StatelessWidget {
   final Color player2Color;
 
   const DifficultySelectionPage({
-    Key? key,
+    super.key,
     required this.mode,
     required this.player1Name,
     required this.player2Name,
     required this.player1Color,
     required this.player2Color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +26,7 @@ class DifficultySelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Niveau de difficulté",
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
