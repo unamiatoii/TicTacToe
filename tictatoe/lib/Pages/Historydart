@@ -1,10 +1,10 @@
 import 'dart:convert';
-import 'dart:math';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
-import 'dart:async' show Future;
-import 'package:flutter/services.dart' show rootBundle;
+
 
 // Classe de données pour représenter une partie
 class GameHistory {
@@ -24,38 +24,41 @@ class GameHistory {
 }
 
 class GameHistoryPage extends StatelessWidget {
-  // Charger les données depuis le fichier JSON
+  // Fonction pour charger les données depuis le fichier JSON
   Future<List<GameHistory>> loadHistoryData() async {
-    String jsonString = await rootBundle.loadString('lib/data/history.json');
-    List<dynamic> jsonData = json.decode(jsonString);
-    List<GameHistory> historyData = [];
-    // Définir une liste de couleurs prédéfinies
-    List<Color> colors = [
-      Colors.green,
-    ];
-    Random random = Random(); // Créer une instance de Random
-    jsonData.forEach((game) {
-      // Sélectionner aléatoirement une couleur de la liste
-      Color color = colors[random.nextInt(colors.length)];
-      historyData.add(GameHistory(
-        player1: game['player1'],
-        player2: game['player2'],
-        result: game['result'],
-        date: DateTime.parse(game['date']),
-        color: color, // Passer la couleur à l'objet GameHistory
-      ));
-    });
-    return historyData;
+    try {
+      // Obtenez le répertoire d'application
+      Directory directory = await getApplicationDocumentsDirectory();
+      // Obtenez le chemin complet du fichier JSON
+      String filePath = '${directory.path}/history.json';
+
+      // Lire le contenu du fichier JSON
+      String jsonString = await File(filePath).readAsString();
+      // Convertir la chaîne JSON en liste d'objets GameHistory
+      List<dynamic> jsonData = json.decode(jsonString);
+      List<GameHistory> historyData = jsonData
+          .map((game) => GameHistory(
+                player1: game['player1'],
+                player2: game['player2'],
+                result: game['result'],
+                date: DateTime.parse(game['date']),
+                color: Color(0xFF7A90A4),
+              ))
+          .toList();
+      return historyData;
+    } catch (e) {
+      print('Erreur lors du chargement des données : $e');
+      return [];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      appBar: RoundedAppBar(
-        title: 'Historique des parties',
+      appBar:  RoundedAppBar(
+        title: "Historique des parties",
       ),
-      bottomNavigationBar: CustomBottomAppBar(),
+      bottomNavigationBar: const CustomBottomAppBar(),
       body: FutureBuilder<List<GameHistory>>(
         future: loadHistoryData(),
         builder: (context, snapshot) {
@@ -82,31 +85,47 @@ class GameHistoryPage extends StatelessWidget {
     );
   }
 
-  // Widget pour afficher un élément de partie de manière esthétique
-  Widget _buildGameListItem(GameHistory game) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0), // Arrondir les bords
-      ),
-      elevation: 4,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: ListTile(
-        title: Text(
-          '${game.player1} vs ${game.player2}',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+Widget _buildGameListItem(GameHistory game) {
+  return Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(20.0), // Arrondir les bords de la carte
+    ),
+    elevation: 4,
+    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(20.0), // Arrondir les bords du InkWell
+      onTap: () {
+        // Action à effectuer lorsqu'un élément de partie est cliqué
+      },
+      child: Container(
+        padding: EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20.0), // Arrondir les bords du conteneur
+          color: game.color,
         ),
-        subtitle: Text(
-          'Résultat: ${game.result}\nDate: ${_formatDate(game.date)}',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${game.player1} vs ${game.player2}',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Résultat: ${game.result}',
+              style: TextStyle(fontSize: 16),
+            ),
+            SizedBox(height: 4),
+            Text(
+              'Date: ${_formatDate(game.date)}',
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
         ),
-        trailing: Icon(Icons.arrow_forward_ios),
-        tileColor: game.color, // Utiliser la couleur associée à la partie
-        onTap: () {
-          // Implémentez une action lorsque l'utilisateur clique sur un élément de partie
-          // Par exemple, ouvrir une page de détails de la partie
-        },
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Fonction pour formater la date dans un format convivial
   String _formatDate(DateTime date) {

@@ -182,10 +182,16 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
               onPressed: () {
                 Navigator.of(context).pop();
                 gameLogic.endGame(
-                    winner,
-                    widget.player1Name,
-                    widget
-                        .player2Name); // Enregistrer les données de la partie terminée
+                  winner,
+                  widget.player1Name,
+                  widget.player2Name,
+                );
+
+                // Afficher les données dans la console
+                print('Winner: $winner');
+                print('Player 1: ${widget.player1Name}');
+                print('Player 2: ${widget.player2Name}');
+
                 gameLogic.initializeBoard();
               },
               child: Row(

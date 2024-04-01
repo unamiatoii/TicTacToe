@@ -183,10 +183,8 @@ class GameLogic {
     String jsonData = jsonEncode(jsonDataList);
 
     try {
-      // Obtenez le répertoire d'application
-      Directory directory = await getApplicationDocumentsDirectory();
-      // Obtenez le chemin complet du fichier JSON
-      String filePath = '${directory.path}/history.json';
+      // Obtenez le chemin complet du fichier JSON dans le répertoire /lib/data
+      String filePath = 'lib/data/history.json';
       // Écrire les données JSON dans le fichier
       await File(filePath).writeAsString(jsonData);
       print('Données d\'historique des parties enregistrées dans $filePath');
