@@ -13,7 +13,7 @@ class GameModeSelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Choix du mode",
       ),
-      bottomNavigationBar:  CustomBottomAppBar(),
+      bottomNavigationBar: CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -113,6 +113,33 @@ class GameModeSelectionPage extends StatelessWidget {
 
   // Fonction pour naviguer vers la page de sélection de la difficulté avec le mode choisi
   void _navigateToDifficultySelectionPage(BuildContext context, int mode) {
-    navigateToPage(context, PlayerSelectionPage(mode: mode));
+    if (mode == 3) {
+      _showComingSoonDialog(context);
+    } else {
+      navigateToPage(context, PlayerSelectionPage(mode: mode));
+    }
+  }
+
+  Future<void> _showComingSoonDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Fonctionnalité à venir'),
+          content: Text('La fonctionnalité sera disponible bientôt.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'OK',
+                style: TextStyle(color: Theme.of(context).colorScheme.surface),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
