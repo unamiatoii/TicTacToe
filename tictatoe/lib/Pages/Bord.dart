@@ -48,7 +48,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
     }
 
     return Scaffold(
-      bottomNavigationBar: const CustomBottomAppBar(),
+      bottomNavigationBar:  CustomBottomAppBar(),
       appBar: const RoundedAppBar(
         title: "Tic Tac Toe",
       ),
@@ -132,26 +132,26 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
     });
   }
 
- void _playComputerMove() {
-  // Définir la durée de jeu de l'ordinateur
-  const computerMoveDuration = Duration(milliseconds: 500);
+  void _playComputerMove() {
+    // Définir la durée de jeu de l'ordinateur
+    const computerMoveDuration = Duration(milliseconds: 500);
 
-  // Attendre la durée spécifiée avant de jouer le coup de l'ordinateur
-  Future.delayed(computerMoveDuration, () {
-    final Random random = Random();
-    int randomRow, randomCol;
-    do {
-      randomRow = random.nextInt(widget.boardSize);
-      randomCol = random.nextInt(widget.boardSize);
-    } while (gameLogic.board[randomRow][randomCol] != '');
+    // Attendre la durée spécifiée avant de jouer le coup de l'ordinateur
+    Future.delayed(computerMoveDuration, () {
+      final Random random = Random();
+      int randomRow, randomCol;
+      do {
+        randomRow = random.nextInt(widget.boardSize);
+        randomCol = random.nextInt(widget.boardSize);
+      } while (gameLogic.board[randomRow][randomCol] != '');
 
-    // Imprimer le mouvement de l'ordinateur dans la console
-    print('L\'ordinateur a joué au : ($randomRow, $randomCol)');
+      // Imprimer le mouvement de l'ordinateur dans la console
+      print('L\'ordinateur a joué au : ($randomRow, $randomCol)');
 
-    // Appeler la méthode _playMove à l'intérieur de la fonction anonyme
-    _playMove(randomRow, randomCol);
-  });
-}
+      // Appeler la méthode _playMove à l'intérieur de la fonction anonyme
+      _playMove(randomRow, randomCol);
+    });
+  }
 
   void _showGameOverDialog(String winner) {
     String title = winner == 'Match nul' ? 'Match nul' : 'Le vainqueur est...';
@@ -195,7 +195,7 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
                 print('Player 1: ${widget.player1Name}');
                 print('Player 2: ${widget.player2Name}');
 
-                gameLogic.initializeBoard();
+                gameLogic.initializeBoard(); // Réinitialiser le plateau de jeu
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,

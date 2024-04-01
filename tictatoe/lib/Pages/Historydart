@@ -58,7 +58,7 @@ class GameHistoryPage extends StatelessWidget {
       appBar:  RoundedAppBar(
         title: "Historique des parties",
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
+      bottomNavigationBar:  CustomBottomAppBar(),
       body: FutureBuilder<List<GameHistory>>(
         future: loadHistoryData(),
         builder: (context, snapshot) {

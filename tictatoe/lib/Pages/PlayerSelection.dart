@@ -4,6 +4,7 @@ import 'package:tictatoe/component/AppBar.dart';
 import 'package:tictatoe/component/BottomAppBar.dart';
 import 'package:tictatoe/component/ChoosePlayer.dart';
 import 'package:tictatoe/function/ChangePage.dart';
+import 'dart:math';
 
 class PlayerSelectionPage extends StatefulWidget {
   final int mode;
@@ -36,12 +37,28 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
 
   // Définir les données de l'ordinateur par défaut
   final String _computerName = 'Ordinateur';
-  final Color _computerColor = Colors.grey;
+  late Color _computerColor; // Couleur de l'ordinateur
+
+  // Fonction pour choisir une couleur aléatoire parmi les couleurs disponibles
+  Color _getRandomColor() {
+    // Générer un indice aléatoire dans la plage des indices disponibles
+    final randomIndex = Random().nextInt(_availableColors.length);
+    // Récupérer la couleur correspondante à l'indice aléatoire
+    return _availableColors[randomIndex];
+  }
+
+  @override
+  void initState() {
+    // Appeler initState de la classe parent
+    super.initState();
+    // Initialiser la couleur de l'ordinateur
+    _computerColor = _getRandomColor();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomBottomAppBar(),
+      bottomNavigationBar:  CustomBottomAppBar(),
       appBar: const RoundedAppBar(
         title: "Choix des joueurs",
       ),
@@ -128,8 +145,8 @@ class _PlayerSelectionPageState extends State<PlayerSelectionPage> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text("Attention"),
-                              content:
-                                  const Text("Veuillez saisir le nom du Joueur 1."),
+                              content: const Text(
+                                  "Veuillez saisir le nom du Joueur 1."),
                               actions: <Widget>[
                                 TextButton(
                                   onPressed: () {

@@ -13,7 +13,7 @@ class GameModeSelectionPage extends StatelessWidget {
       appBar: const RoundedAppBar(
         title: "Choix du mode",
       ),
-      bottomNavigationBar: const CustomBottomAppBar(),
+      bottomNavigationBar:  CustomBottomAppBar(),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
