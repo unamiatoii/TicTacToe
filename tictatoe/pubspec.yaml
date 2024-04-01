@@ -67,7 +67,6 @@ flutter:
     - images/splash.png
     - images/splash12.png
     - images/ModeImg.png
-    - lib/data/history.json
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

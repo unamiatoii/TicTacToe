@@ -132,23 +132,26 @@ class _TicTacToeBoardState extends State<TicTacToeBoard> {
     });
   }
 
-  void _playComputerMove() {
-    // Définir la durée de jeu de l'ordinateur
-    const computerMoveDuration = Duration(milliseconds: 300);
+ void _playComputerMove() {
+  // Définir la durée de jeu de l'ordinateur
+  const computerMoveDuration = Duration(milliseconds: 500);
 
-    // Attendre la durée spécifiée avant de jouer le coup de l'ordinateur
-    Future.delayed(computerMoveDuration, () {
-      final Random random = Random();
-      int randomRow, randomCol;
-      do {
-        randomRow = random.nextInt(widget.boardSize);
-        randomCol = random.nextInt(widget.boardSize);
-      } while (gameLogic.board[randomRow][randomCol] != ' ');
+  // Attendre la durée spécifiée avant de jouer le coup de l'ordinateur
+  Future.delayed(computerMoveDuration, () {
+    final Random random = Random();
+    int randomRow, randomCol;
+    do {
+      randomRow = random.nextInt(widget.boardSize);
+      randomCol = random.nextInt(widget.boardSize);
+    } while (gameLogic.board[randomRow][randomCol] != '');
 
-      // Appeler la méthode _playMove à l'intérieur de la fonction anonyme
-      _playMove(randomRow, randomCol);
-    });
-  }
+    // Imprimer le mouvement de l'ordinateur dans la console
+    print('L\'ordinateur a joué au : ($randomRow, $randomCol)');
+
+    // Appeler la méthode _playMove à l'intérieur de la fonction anonyme
+    _playMove(randomRow, randomCol);
+  });
+}
 
   void _showGameOverDialog(String winner) {
     String title = winner == 'Match nul' ? 'Match nul' : 'Le vainqueur est...';

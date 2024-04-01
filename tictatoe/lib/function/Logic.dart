@@ -42,6 +42,7 @@ class GameLogic {
       gridSize,
       (_) => List.filled(gridSize, ''),
     );
+    initializeBoard(); // Initialiser le plateau de jeu au début de la partie
   }
 
   // Fonction pour jouer un coup
@@ -60,7 +61,7 @@ class GameLogic {
 // Fonction pour vérifier s'il y a un gagnant
   bool checkForWinner(int row, int col) {
     String player = board[row][col];
-    int target = 3; // Nombre d'éléments à aligner pour gagner
+    int target = board.length; // Nombre d'éléments à aligner pour gagner
 
     // Fonction pour vérifier si une ligne ou une colonne contient un alignement de 'target' éléments
     bool checkLineOrColumn(int i, int j, int di, int dj) {
@@ -88,17 +89,15 @@ class GameLogic {
     }
 
     // Vérifie les diagonales
-    for (int i = -board.length + 1; i < board.length; i++) {
-      if (checkLineOrColumn(i < 0 ? -i : 0, i < 0 ? 0 : i, 1, 1)) return true;
-      if (checkLineOrColumn(
-          i < 0 ? -i : 0, board.length - 1 - (i < 0 ? 0 : i), 1, -1))
-        return true;
-    }
+    if (checkLineOrColumn(row - col, 0, 1, 1))
+      return true; // Diagonale principale
+    if (checkLineOrColumn(0, col - row, 1, 1))
+      return true; // Diagonale secondaire
 
-    return false;
+    return false; // Aucun gagnant trouvé
   }
 
-  // Fonction pour vérifier s'il y a un match nul
+// Fonction pour vérifier s'il y a un match nul
   bool checkForDraw() {
     // Parcourt toutes les cases du plateau
     for (int i = 0; i < board.length; i++) {
@@ -112,7 +111,6 @@ class GameLogic {
     return true; // S'il n'y a pas de case vide, c'est un match nul
   }
 
-  // Fonction pour terminer une partie et enregistrer les données
   // Fonction pour terminer une partie et enregistrer les données
   void endGame(String winner, String player1Name, String player2Name) async {
     // Créer une nouvelle instance de GameHistory avec les données de la partie
@@ -183,8 +181,9 @@ class GameLogic {
     String jsonData = jsonEncode(jsonDataList);
 
     try {
-      // Obtenez le chemin complet du fichier JSON dans le répertoire /lib/data
-      String filePath = 'lib/data/history.json';
+      // Obtenez le chemin complet du fichier JSON dans le répertoire d'application
+      Directory directory = await getApplicationDocumentsDirectory();
+      String filePath = '${directory.path}/history.json';
       // Écrire les données JSON dans le fichier
       await File(filePath).writeAsString(jsonData);
       print('Données d\'historique des parties enregistrées dans $filePath');
